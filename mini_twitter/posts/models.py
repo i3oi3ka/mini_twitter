@@ -1,6 +1,6 @@
 from django.db import models
 
-from mini_twitter.users.models import User
+from users.models import User
 
 
 # Створіть модель Post в додатку "posts".
