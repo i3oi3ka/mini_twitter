@@ -11,6 +11,9 @@ class Post(models.Model):
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return f'Post: {self.title}, created: {self.created_at}'
+
 
 # Створіть модель Comment в додатку "posts".
 # Ваша модель Comment повинна містити наступні поля: user (посилання на модель User), post (посилання на модель Post), content, created_at.

@@ -1,12 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Список Користувачів</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-    {% for user in users %}
-        {{ user }}
-    {% endfor %}
+    <div class="container">
+        <h1 class="my-4">Список Користувачів</h1>
+        <ul class="list-group">
+            {% for user in users %}
+                <li class="list-group-item">
+                    <h2>{{ user.username }}</h2>
+                    <p>Email: {{ user.email }}</p>
+                    <p>Date joined: {{ user.date_joined }}</p>
+                    <!-- Додайте інші поля користувача, які вам потрібні -->
+                </li>
+            {% empty %}
+                <p class="alert alert-info">На жаль, поки що немає жодних користувачів.</p>
+            {% endfor %}
+        </ul>
+    </div>
 </body>
 </html>

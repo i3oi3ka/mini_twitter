@@ -1,12 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Список Постів</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-    {% for post in posts %}
-        {{ post }}
-    {% endfor %}
+    <div class="container">
+        <h1 class="my-4">Список Постів</h1>
+        <ul class="list-group">
+            {% for post in posts %}
+                <li class="list-group-item">
+                    <h2>{{ post.title }}</h2>
+                    <p>{{ post.content }}</p>
+                    <p>Автор: {{ post.user.username }}</p>
+                    <p>Дата створення: {{ post.created_at }}</p>
+                </li>
+            {% empty %}
+                <p class="alert alert-info">На жаль, поки що немає жодних постів.</p>
+            {% endfor %}
+        </ul>
+    </div>
 </body>
 </html>
