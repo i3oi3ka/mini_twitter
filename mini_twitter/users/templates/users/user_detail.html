@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="container">
+        <h1 class="my-4">Інформація про користувача</h1>
+        <ul class="list-group">
+                <li class="list-group-item">
+                    <h2>{{ user.username }}</h2>
+                    <p>Email: {{ user.email }}</p>
+                    <p>Date joined: {{ user.date_joined }}</p>
+                    <!-- Додайте інші поля користувача, які вам потрібні -->
+                </li>
+        </ul>
+        <a href="{% url 'users_list'%}" class="btn btn-secondary mt-3">Back to Users</a>
+        <a href="{% url 'posts_list_user' user.pk %}" class="btn btn-secondary mt-3">User posts</a>
+    </div>
+{% endblock %}

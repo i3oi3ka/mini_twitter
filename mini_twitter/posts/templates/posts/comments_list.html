@@ -1,25 +1,22 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Список Коментарів</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-</head>
-<body>
-    <div class="container">
-        <h1 class="my-4">Список Коментарів</h1>
-        <ul class="list-group">
-            {% for comment in comments %}
-                <li class="list-group-item">
-                    <p>{{ comment.content }}</p>
-                    <p>Автор: {{ comment.user.username }}</p>
-                    <p>Пост: {{ comment.post.title }}</p>
-                    <p>Дата створення: {{ comment.created_at }}</p>
-                </li>
-            {% empty %}
-                <p class="alert alert-info">На жаль, поки що немає жодних коментарів.</p>
-            {% endfor %}
-        </ul>
-    </div>
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h1 class="my-4">Список Коментарів до поста <a href="{% url 'post_detail' post.id %}">{{ post.title }}</a></h1>
+    <ul class="list-group">
+        {% for comment in comments %}
+        <li class="list-group-item">
+            <p>{{ comment.content }}</p>
+            <p>Автор: {{ comment.user.username }}</p>
+            <p>Дата створення: {{ comment.created_at }}</p>
+            <button type="button" class="btn btn-sm btn-outline-secondary">
+                <a href="{% url 'comment_detail' comment.pk %}">View</a>
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+        </li>
+        {% empty %}
+        <p class="alert alert-info">На жаль, поки що немає жодних коментарів.</p>
+        {% endfor %}
+    </ul>
+</div>
 
-</body>
-</html>
+{% endblock %}
