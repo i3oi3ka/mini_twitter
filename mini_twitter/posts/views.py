@@ -15,7 +15,6 @@ def posts_list(request, user_id=None):
         comment_count = dict()
         for post in posts:
             comment_count[str(post.pk)] = Comment.objects.filter(post__id=post.pk).count()
-        print(comment_count)
     return render(request, 'posts/posts_list.html', {'posts': posts, 'comment_count': comment_count})
 
 

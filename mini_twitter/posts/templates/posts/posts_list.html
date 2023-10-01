@@ -5,8 +5,8 @@
     <ul class="list-group">
         {% for post in posts %}
         <li class="list-group-item">
-            <h2>{{ post.title }}</h2>
-            <p>{{ post.content }}</p>
+            <h2><a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a></h2>
+            <p>{{ post.content|truncatechars:100 }}</p>
             <p>Автор: {{ post.user.username }}</p>
             <p>Дата створення: {{ post.created_at }}</p>
             <div class="btn-group">
