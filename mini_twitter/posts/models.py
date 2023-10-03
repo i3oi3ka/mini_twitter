@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.urls import reverse
 from users.models import User
 
 
@@ -14,6 +14,9 @@ class Post(models.Model):
     def __str__(self):
         return f'Post: {self.title}, created: {self.created_at}'
 
+    def get_absolute_url(self):
+        return reverse('post_detail', kwargs={'pk': self.pk})
+
 
 # Створіть модель Comment в додатку "posts".
 # Ваша модель Comment повинна містити наступні поля: user (посилання на модель User), post (посилання на модель Post), content, created_at.
@@ -22,3 +25,6 @@ class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def get_absolute_url(self):
+        return reverse('comment_detail', kwargs={'pk': self.pk})

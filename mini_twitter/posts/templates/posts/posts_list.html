@@ -15,9 +15,7 @@
                 </button>
                 <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
                 <button type="button" class="btn btn-sm btn-outline-secondary">
-                    {% with post.pk as pk%}
-                    <a href="{% url 'comments_list' post.pk %}">Comments ({{ comment_count.pk }})</a>
-                    {% endwith %}
+                    <a href="{% url 'comments_list' post.pk %}">Comments ({{ comment_count|get_item:post.pk }})</a>
                 </button>
             </div>
 
