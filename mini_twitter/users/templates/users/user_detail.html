@@ -36,5 +36,6 @@
         {% endif %}
     {% endif %}
     <a href="{% url 'posts_list_user' user_info.pk %}" class="btn btn-secondary mt-3">User posts</a>
+    <a href="{% url 'message_create' user_info.pk %}" class="btn btn-secondary mt-3">Create Message</a>
 </div>
 {% endblock %}

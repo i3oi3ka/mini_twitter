@@ -4,7 +4,6 @@
     <h1 class="my-4">Список постів</h1>
     <ul class="list-group">
         {% for post in posts %}
-        {% if post.user in follow_users %}
         <li class="list-group-item">
             <h2><a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a></h2>
             <p>{{ post.content|truncatechars:100 }}</p>
@@ -19,17 +18,11 @@
                 <button type="button" class="btn btn-sm btn-outline-secondary">
                     <a href="{% url 'post_detail' post.pk %}">View</a>
                 </button>
-                {% if user == post.user %}
-                <button type="button" class="btn btn-sm btn-outline-secondary">
-                    <a href="{% url 'post_update' post.pk %}">Edit</a>
-                </button>
-                {% endif %}
                 <button type="button" class="btn btn-sm btn-outline-secondary">
                     <a href="{% url 'comments_list' post.pk %}">Comments ({{ post.comment_count }})</a>
                 </button>
             </div>
         </li>
-        {% endif %}
         {% empty %}
         <p class="alert alert-info">На жаль, поки що немає жодних постів.</p>
         {% endfor %}

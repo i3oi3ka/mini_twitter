@@ -60,13 +60,13 @@
                     </li>
                     <!-- Посилання на повідомлення, редагування профілю і т. д. -->
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Повідомлення</a>
+                        <a class="nav-link" href="{% url 'message_list' %}">Повідомлення</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'change_user_info' user.pk %}">Редагувати профіль</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'change_profile' user.profile.pk %}">Редагувати Аватар</a>
+                        <a class="nav-link" href="{% url 'change_profile' user.profile.pk %}">Редагувати Аватар та Біо</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'posts_list_user' user.pk %}">Мої пости</a>

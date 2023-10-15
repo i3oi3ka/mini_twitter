@@ -37,17 +37,21 @@ class PostListView(ListView):
 
 class PostFollowListView(ListView):
     model = Post
-    template_name = 'posts/posts_follow_list.html'
+    template_name = 'posts/posts_list.html'
     context_object_name = 'posts'
 
-    def get_queryset(self):
-        posts = Post.objects.all().select_related('user')
-        return posts.annotate(comment_count=Count('comment', distinct=True),
-                              like_count=Count('like', distinct=True)).order_by('-created_at')
+    # def get_queryset(self):
+    #     posts = Post.objects.all().select_related('user')
+    #     return posts.annotate(comment_count=Count('comment', distinct=True),
+    #                           like_count=Count('like', distinct=True)).order_by('-created_at')
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['follow_users'] = self.request.user.following.all()
+        user = self.request.user
+        context['follow_users'] = user.following.all()
+        context['posts'] = context['posts'].filter(user__in=context['follow_users']).select_related('user').annotate(
+            comment_count=Count('comment', distinct=True),
+            like_count=Count('like', distinct=True)).order_by('-created_at')
         return context
 
 
@@ -185,7 +189,7 @@ class CommentUpdateView(UpdateView):
 class CommentDeleteView(DeleteView):
     model = Comment
     template_name = 'posts/comment_delete.html'
-    context_object_name = 'comment'
+    success_url = reverse_lazy('posts_list')
 
 
 def like(request, pk):
