@@ -10,6 +10,7 @@ class Post(models.Model):
     title = models.CharField(max_length=256)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+    like = models.ManyToManyField(User, blank=True, related_name='liked_post')
 
     def __str__(self):
         return f'Post: {self.title}, created: {self.created_at}'

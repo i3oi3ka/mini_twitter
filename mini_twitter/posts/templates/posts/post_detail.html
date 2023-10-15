@@ -6,11 +6,36 @@
         <div class="card-body">
             <h2 class="card-title">{{ post.title }}</h2>
             <p class="card-text">{{ post.content }}</p>
-            <p class="card-text"><strong>Author:</strong> {{ post.user }}</p>
+            <p class="card-text"><strong>Author:</strong> <a href="{% url 'user_detail' post.user.pk %}"> {{ post.user }}</a></p>
+            <p class="card-text">Дата створення: {{ post.created_at }}</p>
+            <p class="card-text"><a href="{% url 'like' post.pk %}"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Bot%C3%B3n_Me_gusta.svg/langru-1024px-Bot%C3%B3n_Me_gusta.svg.png" width="20"> </a>
+                <a href="{% url 'liked_post_user' post.pk %}">{{ post.like_count }}</a>
+            </p>
+            <a href="{% url 'create_comment' post.pk %}" class="btn btn-secondary mt-3">Create comment</a>
+            <a href="{% url 'posts_list'%}" class="btn btn-secondary mt-3">Back to Posts</a>
+            <a href="{% url 'comments_list' post.pk %}" class="btn btn-secondary mt-3">Comments ({{post.comment_count}})</a>
+            {% if user == post.user %}
+            <a href="{% url 'post_update' post.pk %}" class="btn btn-secondary mt-3">Edit</a>
+            <a href="{% url 'post_delete' post.pk %}" class="btn btn-secondary mt-3">Delete</a>
+            {% endif %}
         </div>
     </div>
-    <a href="{% url 'create_comment'%}" class="btn btn-secondary mt-3">Create comment</a>
-    <a href="{% url 'posts_list'%}" class="btn btn-secondary mt-3">Back to Posts</a>
-    <a href="{% url 'comments_list' post.pk %}" class="btn btn-secondary mt-3">Comments ({{count_comments}})</a>
+    <div class="container mt-5">
+        <h1>Коментарі</h1>
+        {% for comment in comments%}
+        <comment class="card">
+            <div class="card">
+                <div class="card-body">
+                    <p class="card-text">{{ comment.content }}</p>
+                    <p class="card-text"><strong>Author:</strong><a href="{% url 'user_detail' comment.user.pk %}"> {{ comment.user }}</a></p>
+                    <p class="card-user">{{ comment.created_at }}</p>
+                </div>
+            </div>
+        </comment>
+        {% empty %}
+            <p class="alert alert-info">На жаль, поки що немає жодних постів.</p>
+        {% endfor %}
+    </div>
+
 </div>
 {% endblock %}

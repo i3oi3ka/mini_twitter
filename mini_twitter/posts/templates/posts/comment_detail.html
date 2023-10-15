@@ -11,6 +11,14 @@
                 </li>
         </ul>
         <a href="{% url 'comments_list' comment.post.pk %}" class="btn btn-secondary mt-3">Back to Comments</a>
+        {% if user == comment.user %}
+            <button type="button" class="btn btn-sm btn-outline-secondary">
+                <a href="{% url 'comment_update' comment.pk %}">Edit</a>
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-secondary">
+                <a href="{% url 'comment_delete' comment.pk %}">Delete</a>
+            </button>
+            {% endif %}
     </div>
 
 {% endblock %}

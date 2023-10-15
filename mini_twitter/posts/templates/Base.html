@@ -13,39 +13,84 @@
     </style>
 </head>
 <body>
-    <header class="bg-primary text-white py-4">
-        <div class="container">
-            <h1 class="display-3">Mini Twitter</h1>
-            <nav class="d-flex justify-content-between align-items-center">
-                <ul class="nav">
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="{% url 'posts_list' %}">Головна</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="{% url 'posts_list' %}">Пости</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="{% url 'users_list' %}">Користувачі</a>
-                    </li>
-                </ul>
+<header class="bg-primary text-white py-4">
+    <div class="container">
+        <h1 class="display-3">Mini Twitter</h1>
+        <nav class="d-flex justify-content-between align-items-center">
+            <ul class="nav">
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{% url 'posts_follow_list' %}">Головна</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{% url 'posts_list' %}"> Усі пости</a>
+                </li>
+                {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{% url 'users_list' %}">Користувачі</a>
+                </li>
+
                 <!-- Add "Create Post" button here -->
                 <a href="{% url 'create_post' %}" class="btn btn-success">Створити пост</a>
-                <a href="{% url 'create_comment' %}" class="btn btn-success">Створити коментар</a>
-            </nav>
-        </div>
-    </header>
+                <span class="me-3 text-white">Вітаю, <a href="{% url 'user_detail' user.pk %}" class="btn btn-outline-info my-2 my-sm-0">{{ user.username }}</a></span>
+                <a href="{% url 'logout' %}" class="btn btn-outline-info my-2 my-sm-0">Вийти</a>
+                {% else %}
+                <a href="{% url 'login' %}" class="btn btn-outline-info my-2 my-sm-0 me-2">Увійти</a>
+                <a href="{% url 'register' %}" class="btn btn-outline-info my-2 my-sm-0">Зареєструватися</a>
+                {% endif %}
 
-    <main class="container my-5">
-        {% block content %}{% endblock %}
-    </main>
+            </ul>
+        </nav>
+    </div>
+</header>
 
-    <footer class="bg-primary text-white text-center py-3">
-        <div class="container">
-            <p>&copy; 2023 Mini Twitter</p>
-        </div>
-    </footer>
+<div class="container my-5">
+    <div class="row">
+        <!-- Ліва бічна панель -->
+        <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-light sidebar">
+            <div class="position-sticky">
+                <ul class="nav flex-column">
+                    <!-- Відображення логотипу користувача, якщо він авторизований -->
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
 
-    <!-- Add Bootstrap JS scripts at the end of the body if needed -->
+                        <img src="{{ user.profile.avatar.url }}" alt="Аватар користувача"
+                             class="img-fluid rounded-circle">
+
+                        <h4>{{ user.username }}</h4>
+                    </li>
+                    <!-- Посилання на повідомлення, редагування профілю і т. д. -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Повідомлення</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'change_user_info' user.pk %}">Редагувати профіль</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'change_profile' user.profile.pk %}">Редагувати Аватар</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'posts_list_user' user.pk %}">Мої пости</a>
+                    </li>
+                    {% endif %}
+                    <!-- Додайте інші пункти меню сюди -->
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Основний блок контенту (посередині) з вирівнюванням по верхньому краю -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 align-items-start">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+</div>
+
+<footer class="bg-primary text-white text-center py-3">
+    <div class="container">
+        <p>&copy; 2023 Mini Twitter</p>
+    </div>
+</footer>
+
+<!-- Add Bootstrap JS scripts at the end of the body if needed -->
 
 </body>
 </html>

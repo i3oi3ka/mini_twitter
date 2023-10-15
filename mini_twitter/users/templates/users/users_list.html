@@ -3,17 +3,29 @@
 <div class="container">
     <h1 class="my-4">Список Користувачів</h1>
     <ul class="list-group">
-        {% for user in users %}
+        {% for user_info in users %}
         <li class="list-group-item">
-            <!-- Додайте інші поля користувача, які вам потрібні -->
+            <!-- Інші поля користувача, які вам потрібні -->
             <div class="btn-group">
-                    <a href="{% url 'user_detail' user.pk %}"><h2>{{ user.username }}</h2></a>
+                <img src="{{ user_info.profile.avatar.url }}" alt="Аватар користувача"
+                 class="img-fluid rounded-circle" width="30">
+                <a href="{% url 'user_detail' user_info.pk %}"><h2>{{ user_info }}</h2></a>
+                {% if user_info != user %}
+                    {% if user_info in following %}
+                    <form method="post" action="{% url 'unsubscribe' user_info.pk %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Відписатися</button>
+                    </form>
+                    {% else %}
+                    <form method="post" action="{% url 'subscribe' user_info.pk %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary">Підписатися</button>
+                    </form>
+                    {% endif %}
+                {% endif %}
             </div>
         </li>
-        {% empty %}
-        <p class="alert alert-info">На жаль, поки що немає жодних користувачів.</p>
         {% endfor %}
-
     </ul>
 </div>
 {% endblock %}

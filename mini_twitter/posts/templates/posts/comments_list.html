@@ -6,17 +6,25 @@
         {% for comment in comments %}
         <li class="list-group-item">
             <p>{{ comment.content }}</p>
-            <p>Автор: {{ comment.user.username }}</p>
+            <p>Автор: <a href="{% url 'user_detail' comment.user.pk %}">{{ comment.user.username }}</a></p>
             <p>Дата створення: {{ comment.created_at }}</p>
             <button type="button" class="btn btn-sm btn-outline-secondary">
                 <a href="{% url 'comment_detail' comment.pk %}">View</a>
             </button>
-            <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+            {% if user == comment.user %}
+            <button type="button" class="btn btn-sm btn-outline-secondary">
+                <a href="{% url 'comment_update' comment.pk %}">Edit</a>
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-secondary">
+                <a href="{% url 'comment_delete' comment.pk %}">Delete</a>
+            </button>
+            {% endif %}
         </li>
         {% empty %}
         <p class="alert alert-info">На жаль, поки що немає жодних коментарів.</p>
         {% endfor %}
     </ul>
+    <a href="{% url 'create_comment' post.pk %}" class="btn btn-secondary mt-3">Create comment</a>
 </div>
 
 {% endblock %}
