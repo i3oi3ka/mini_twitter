@@ -44,5 +44,5 @@ class MessageListView(ListView):
 
     def get_queryset(self):
         user = self.request.user
-        messages = Message.objects.filter(receiver=user).select_related('sender')
+        messages = Message.objects.filter(receiver=user).select_related('sender').order_by('-created_at')
         return messages
