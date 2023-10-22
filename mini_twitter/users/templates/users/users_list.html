@@ -10,6 +10,11 @@
                 <img src="{{ user_info.profile.avatar.url }}" alt="Аватар користувача"
                  class="img-fluid rounded-circle" width="30">
                 <a href="{% url 'user_detail' user_info.pk %}"><h2>{{ user_info }}</h2></a>
+                <div class="btn-group">
+                <button type="button" class="btn btn-sm btn-outline-secondary">
+                    <a href="{% url 'message_create' user_info.pk %}" class="btn btn-primary">Надіслати повідомлення</a>
+                </button>
+
                 {% if user_info != user %}
                     {% if user_info in following %}
                     <form method="post" action="{% url 'unsubscribe' user_info.pk %}">
@@ -23,9 +28,11 @@
                     </form>
                     {% endif %}
                 {% endif %}
+                </div>
             </div>
         </li>
         {% endfor %}
     </ul>
 </div>
+
 {% endblock %}

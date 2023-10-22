@@ -24,6 +24,13 @@ class MessageDetailView(DetailView):
     def get_queryset(self):
         return super().get_queryset().select_related('sender', 'receiver')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if context['message'].receiver == self.request.user:
+            context['message'].unread = False
+            context['message'].save()
+        return context
+
 
 class MessageUpdateView(UpdateView):
     model = Message
@@ -34,15 +41,23 @@ class MessageUpdateView(UpdateView):
 class MessageDeleteView(DeleteView):
     model = Message
     template_name = 'message/message_delete.html'
-    success_url = reverse_lazy('posts_list')
+    success_url = reverse_lazy('message_list')
 
 
 class MessageListView(ListView):
     model = Message
     template_name = 'message/message_list.html'
     context_object_name = 'messages'
+    paginate_by = 2
 
     def get_queryset(self):
         user = self.request.user
+        if self.kwargs['folder'] == 'sent':
+            return Message.objects.filter(sender=user).select_related('sender', 'receiver').order_by('-created_at')
         messages = Message.objects.filter(receiver=user).select_related('sender').order_by('-created_at')
         return messages
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['folder'] = self.kwargs['folder']
+        return context

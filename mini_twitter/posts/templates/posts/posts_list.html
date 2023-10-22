@@ -2,10 +2,18 @@
 {% block content %}
 <div class="container">
     <h1 class="my-4">Список постів</h1>
+    <div class="btn-group" role="group" aria-label="Перегляд постів">
+        <a href="{% url 'posts_list'%}" class="btn btn-primary {% if folder == 'all' %}active{% endif %}">Усі пости</a>
+        <a href="{% url 'posts_list' 'follow' %}" class="btn btn-primary {% if folder == 'follow' %}active{% endif %}">Пости підписників</a>
+        <a href="{% url 'posts_list' 'my' %}" class="btn btn-primary {% if folder == 'my' %}active{% endif %}">Мої пости</a>
+    </div>
     <ul class="list-group">
         {% for post in posts %}
         <li class="list-group-item">
             <h2><a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a></h2>
+            {% if post.image %}
+            <img src="{{ post.image.url }}" height="400">
+            {% endif %}
             <p>{{ post.content|truncatechars:100 }}</p>
             <p>Автор: <a href="{% url 'user_detail' post.user.pk %}">{{ post.user.username }}</a></p>
             <p>Дата створення: {{ post.created_at }}</p>
@@ -33,5 +41,6 @@
         <p class="alert alert-info">На жаль, поки що немає жодних постів.</p>
         {% endfor %}
     </ul>
+    {% include 'pagination.html' %}
 </div>
 {% endblock %}

@@ -15,7 +15,7 @@
                 <a href="{% url 'user_detail' message.receiver.pk %}"> {{ message.receiver }}</a>
             </p>
             <p class="card-text">Дата створення: {{ message.created_at }}</p>
-
+            <a href="{% url 'message_create' message.sender.pk %}" class="btn btn-secondary mt-3">Reply</a>
             {% if user == message.sender %}
             <a href="{% url 'message_update' message.pk %}" class="btn btn-secondary mt-3">Edit</a>
             <a href="{% url 'message_delete' message.pk %}" class="btn btn-secondary mt-3">Delete</a>

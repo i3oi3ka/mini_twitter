@@ -1,12 +1,12 @@
+from comment.models import Comment
 from django.db.models import Count
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, DetailView, UpdateView
 from django.views.generic.edit import DeleteView
 
-from .forms import PostForm, CommentForm
-from .models import Post, Comment
+from .forms import PostForm
+from .models import Post
 
 
 # def posts_list(request, user_id=None):
@@ -25,34 +25,49 @@ class PostListView(ListView):
     model = Post
     template_name = 'posts/posts_list.html'
     context_object_name = 'posts'
+    paginate_by = 2
 
     def get_queryset(self):
-        if self.kwargs.get('user_id'):
-            posts = Post.objects.filter(user__id=self.kwargs['user_id']).select_related('user')
+        if self.kwargs.get('folder'):
+            folder = self.kwargs.get('folder')
+            if folder == 'my':
+                posts = Post.objects.filter(user=self.request.user).select_related('user')
+            elif folder == 'follow':
+                follow_users = self.request.user.following.all()
+                posts = Post.objects.filter(user__in=follow_users).select_related('user')
         else:
             posts = Post.objects.all().select_related('user')
         return posts.annotate(comment_count=Count('comment', distinct=True),
                               like_count=Count('like', distinct=True)).order_by('-created_at')
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.kwargs.get('folder'):
+            context['folder'] = self.kwargs['folder']
+        else:
+            context['folder'] = 'all'
+        return context
 
-class PostFollowListView(ListView):
+
+class PostUserListView(ListView):
     model = Post
     template_name = 'posts/posts_list.html'
     context_object_name = 'posts'
+    paginate_by = 2
 
-    # def get_queryset(self):
-    #     posts = Post.objects.all().select_related('user')
-    #     return posts.annotate(comment_count=Count('comment', distinct=True),
-    #                           like_count=Count('like', distinct=True)).order_by('-created_at')
+    def get_queryset(self):
+        posts = Post.objects.filter(user__id=self.kwargs['user_id']).select_related('user')
+        return posts.annotate(comment_count=Count('comment', distinct=True),
+                              like_count=Count('like', distinct=True)).order_by('-created_at')
 
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data(**kwargs)
-        user = self.request.user
-        context['follow_users'] = user.following.all()
-        context['posts'] = context['posts'].filter(user__in=context['follow_users']).select_related('user').annotate(
-            comment_count=Count('comment', distinct=True),
-            like_count=Count('like', distinct=True)).order_by('-created_at')
-        return context
+    # def get_context_data(self, *, object_list=None, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     user = self.request.user
+    #     follow_users = user.following.all()
+    #     context['posts'] = context['posts'].filter(user__in=follow_users).select_related('user').annotate(
+    #         comment_count=Count('comment', distinct=True),
+    #         like_count=Count('like', distinct=True)).order_by('-created_at')
+    #     return context
 
 
 # def get_context_data(self, *, object_list=None, **kwargs):
@@ -72,22 +87,6 @@ class PostFollowListView(ListView):
 #         'post': post
 #     }
 #     return render(request, 'posts/comments_list.html', context)
-
-
-class CommentListView(ListView):
-    model = Comment
-    template_name = 'posts/comments_list.html'
-    context_object_name = 'comments'
-
-    def get_queryset(self):
-        comments = Comment.objects.filter(post__id=self.kwargs['post_id']).select_related('user').order_by(
-            '-created_at')
-        return comments
-
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['post'] = get_object_or_404(Post, pk=self.kwargs['post_id'])
-        return context
 
 
 # def create_post(request):
@@ -134,7 +133,7 @@ class PostDetailView(DetailView):
 class PostUpdateView(UpdateView):
     template_name = 'posts/post_update.html'
     model = Post
-    fields = ["title", "content"]
+    fields = ["title", "image", "content"]
 
     def get_queryset(self):
         return super().get_queryset().select_related('user')
@@ -155,41 +154,6 @@ class PostDeleteView(DeleteView):
 #     else:
 #         form = CommentForm()
 #     return render(request, 'posts/create_comment.html', {'form': form})
-
-class CommentCreateView(CreateView):
-    form_class = CommentForm
-    template_name = 'posts/create_comment.html'
-
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        form.instance.post = Post.objects.get(pk=self.kwargs['pk'])
-        return super().form_valid(form)
-
-
-# def comment_detail(request, pk):
-#     comment = get_object_or_404(Comment, pk=pk)
-#     context = {'comment': comment}
-#     return render(request, 'posts/comment_detail.html', context)
-
-class CommentDetailView(DetailView):
-    model = Comment
-    template_name = 'posts/comment_detail.html'
-    context_object_name = 'comment'
-
-
-class CommentUpdateView(UpdateView):
-    model = Comment
-    template_name = 'posts/comment_update.html'
-    fields = ["content"]
-
-    def get_queryset(self):
-        return super().get_queryset().select_related('user')
-
-
-class CommentDeleteView(DeleteView):
-    model = Comment
-    template_name = 'posts/comment_delete.html'
-    success_url = reverse_lazy('posts_list')
 
 
 def like(request, pk):

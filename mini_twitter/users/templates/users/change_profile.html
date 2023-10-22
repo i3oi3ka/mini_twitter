@@ -14,23 +14,9 @@
 
                                 <form class="mx-1 mx-md-4" novalidate method="post"
                                       action="{% url 'change_profile' user.profile.pk %}" enctype="multipart/form-data">
+
                                     {% csrf_token %}
-                                    {% for field in form %}
-                                    <div class="row g-3">
-                                        <div class="col-sm-12">
-                                            <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-                                            {{ field }}
-                                            {% if field.errors %}
-                                            <div class="alert alert-danger">
-                                                {{ field.errors }}
-                                            </div>
-                                            {% endif %}
-                                            <div class="invalid-feedback">
-                                                Будь ласка, введіть {{ field.label }}.
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {% endfor %}
+                                    {{ form.as_p }}
                                     <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
                                         <button type="submit" class="btn btn-primary btn-lg">Зберегти</button>
                                     </div>
