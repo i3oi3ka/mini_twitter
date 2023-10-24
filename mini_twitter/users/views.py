@@ -84,7 +84,7 @@ class ChangeInfo(UpdateView):
     model = User
 
     def form_valid(self, form):
-        form.instance.user = self.request.user  # Передаємо користувача
+        form.instance.user = self.request.user # Передаємо користувача
         return super().form_valid(form)
 
 

@@ -16,7 +16,7 @@
             {{ form.text }}
         </div>
         <button type="submit" class="btn btn-primary">Create</button>
-        <a href="/posts/" class="btn btn-secondary">Cancel</a>
+        <a href= "{% url 'message_list' 'inbox' %}" class="btn btn-secondary">Cancel</a>
     </form>
 
 

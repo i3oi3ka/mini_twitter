@@ -24,13 +24,13 @@ class LoginForm(AuthenticationForm):
 class ChangeUserInfo(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['birthday', 'first_name', 'last_name', 'email', 'age']
+        fields = ['birthday', 'first_name', 'last_name', 'email']
         widgets = {
             'birthday': forms.DateInput(attrs={'class': 'form-control', 'placeholder': 'Дата народження'}),
             'first_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Прізвище'}),
             'last_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Імя'}),
             'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'email'}),
-            'age': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Вік'})
+
         }
 
 

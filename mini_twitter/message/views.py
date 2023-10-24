@@ -41,7 +41,7 @@ class MessageUpdateView(UpdateView):
 class MessageDeleteView(DeleteView):
     model = Message
     template_name = 'message/message_delete.html'
-    success_url = reverse_lazy('message_list')
+    success_url = reverse_lazy('message_list', kwargs={"folder": "inbox"})
 
 
 class MessageListView(ListView):
